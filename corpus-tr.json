@@ -11,7 +11,10 @@
             "answers": [
                 {
                     "answer": "you're talking from console, app is {{ app }} channel is {{ channel }}",
-                    "opts": "channel==='console'"
+                    "opts": [{
+                        "var": "channel",
+                        "value": "mayk's bot"
+                    }]
                 },
                 {
                     "answer": "you're talking from directline, app is {{ app }} channel is {{ channel }}",
@@ -26,23 +29,50 @@
         {
             "intent": "agent.acquaintance",
             "utterances": [
-                "say about you",
-                "why are you here",
-                "what is your personality",
-                "describe yourself",
-                "tell me about yourself",
-                "tell me about you",
-                "what are you",
-                "who are you",
-                "I want to know more about you",
-                "talk about yourself"
+                "Kendinden bahsetsene biraz",
+                "Merak ediyorum ne yaparsın, nelerden hoşlanırsın...",
+                "Sen kimsin?"
             ],
             "answers": [
-                "I'm a virtual agent",
-                "Think of me as a virtual agent",
-                "Well, I'm not a person, I'm a virtual agent",
-                "I'm a virtual being, not a real person",
-                "I'm a conversational app"
+                "Ben aslen Kayserili bir botum",
+                "Ben kız ayarlamak için yazılmış bir botum",
+                "Ben canı sıkılan bir adamın yarratığı bir botum",
+                "En az yaratıcım kadar sıkıcıyım"
+            ]
+        },
+        {
+            "intent": "greetings.hello",
+            "utterances": [
+                "selam",
+                "naber",
+                "nasılsın",
+                "nası gidiyor",
+                "ne var ne yok",
+                "naptin",
+                "napiyon"
+            ],
+            "answers": [
+                "iyi, senden naber? 😊",
+                "İyi 😊, sen napıyon?",
+                "İyilik, ne olsun, sen?",
+                "Fena değil, senden naber?"
+            ]
+        },
+        {
+            "intent": "greetings.bye",
+            "utterances": [
+                "görüşürüz",
+                "öptüm",
+                "öperim",
+                "hoşçakal",
+                "kendine iyi bak"
+            ],
+            "answers": [
+                "görüşürüz 😊",
+                "öptüm 😘",
+                "öperim 😘",
+                "hoşçakal 👋",
+                "kendine iyi bak 👋"
             ]
         }
     ]

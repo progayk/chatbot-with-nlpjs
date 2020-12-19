@@ -87,6 +87,8 @@
     <script>
 
         const { containerBootstrap, Nlp, LangTr, fs } = window.nlpjs;
+        // const manager = new NerManager({ threshold: 0.8 });
+        // console.log('NerManager', manager);
 
         const Locale = 'tr'
 
@@ -100,22 +102,7 @@
             nlp = container.get('nlp');
             nlp.settings.autoSave = false;
             nlp.addLanguage('tr');
-            // Adds the utterances and intents for the NLP
-            await nlp.addCorpus('./corpus-tr.json');
-            // nlp.addDocument(Locale, 'görüşürüz', 'greetings.bye');
-            // nlp.addDocument(Locale, 'kendine iyi bak', 'greetings.bye');
-            // nlp.addDocument(Locale, 'Bye', 'greetings.bye');
-            // nlp.addDocument(Locale, 'öptüm', 'greetings.bye');
-            // nlp.addDocument(Locale, 'hoşçakal', 'greetings.bye');
-            // nlp.addDocument(Locale, 'selam', 'greetings.hello');
-            // nlp.addDocument(Locale, 'merhaba', 'greetings.hello');
-            // nlp.addDocument(Locale, 'slm', 'greetings.hello');
-
-            // // Train also the NLG
-            // nlp.addAnswer(Locale, 'greetings.bye', 'Öperim ');
-            // nlp.addAnswer(Locale, 'greetings.bye', 'Görüşürüz');
-            // nlp.addAnswer(Locale, 'greetings.hello', 'Selam');
-            // nlp.addAnswer(Locale, 'greetings.hello', 'Selam, naber?');
+            await nlp.addCorpus('https://raw.githubusercontent.com/progayk/chatbot-with-nlpjs/master/corpus-tr.json');
             await nlp.train();
             const response = await nlp.process('tr', 'selam');
             console.log(response);
@@ -156,7 +143,10 @@
                         const res = await nlp.process(Locale, msg);
                         console.log('res', res);
 
-                        if (res.answers.length) {
+                        const ent = await  nlp.extractEntities(Locale, msg)
+                        console.log('ent', ent);
+
+                        if (res.intent !== 'None') {
                             this.respondDirect(res)
                         } else {
                             this.respondNew(res)
