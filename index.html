@@ -143,8 +143,8 @@
                         const res = await nlp.process(Locale, msg);
                         console.log('res', res);
 
-                        const ent = await  nlp.extractEntities(Locale, msg)
-                        console.log('ent', ent);
+                        // const ent = await  nlp.extractEntities(Locale, msg)
+                        // console.log('ent', ent);
 
                         if (res.intent !== 'None') {
                             this.respondDirect(res)
