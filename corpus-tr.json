@@ -1,31 +1,8 @@
 {
     "name": "Corpus",
     "locale": "tr-TR",
+
     "data": [
-        {
-            "intent": "agent.whereami",
-            "utterances": [
-                "neredeyim",
-                "nereden"
-            ],
-            "answers": [
-                {
-                    "answer": "you're talking from console, app is {{ app }} channel is {{ channel }}",
-                    "opts": [{
-                        "var": "channel",
-                        "value": "mayk's bot"
-                    }]
-                },
-                {
-                    "answer": "you're talking from directline, app is {{ app }} channel is {{ channel }}",
-                    "opts": "channel==='directline'"
-                },
-                {
-                    "answer": "you're talking from microsoft emulator, app is {{ app }} channel is {{ channel }}",
-                    "opts": "channel==='msbf-emulator'"
-                }
-            ]
-        },
         {
             "intent": "agent.acquaintance",
             "utterances": [
@@ -44,18 +21,11 @@
             "intent": "greetings.hello",
             "utterances": [
                 "selam",
-                "naber",
-                "nasılsın",
-                "nası gidiyor",
-                "ne var ne yok",
-                "naptin",
-                "napiyon"
+                "merhaba"
             ],
             "answers": [
-                "iyi, senden naber? 😊",
-                "İyi 😊, sen napıyon?",
-                "İyilik, ne olsun, sen?",
-                "Fena değil, senden naber?"
+                "selam",
+                "hey"
             ]
         },
         {
@@ -73,6 +43,32 @@
                 "öperim 😘",
                 "hoşçakal 👋",
                 "kendine iyi bak 👋"
+            ]
+        },
+        {
+            "intent": "greetings.inquering",
+            "utterances": [
+                "naber",
+                "nasılsın",
+                "nası gidiyor",
+                "ne var ne yok",
+                "naptin",
+                "napiyon"
+            ],
+            "answers": [
+                "iyi, senden naber? 😊",
+                "İyi 😊, sen napıyon?",
+                "İyilik, ne olsun, sen?",
+                "Fena değil, senden naber?"
+            ]
+        },
+        {
+            "intent": "hero.realname",
+            "utterances": [
+                "what is the real name of @hero"
+            ],
+            "answers": [
+                "The real name of {{ hero }} is {{ _data[entities.hero.option].realName }}"
             ]
         }
     ]

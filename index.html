@@ -20,6 +20,8 @@
             border-radius: 8px;
             display: flex;
             flex-direction: column;
+            max-height: 600px;
+            overflow: auto; 
         }
 
         .msg-box {
@@ -87,24 +89,19 @@
     <script>
 
         const { containerBootstrap, Nlp, LangTr, fs } = window.nlpjs;
-        // const manager = new NerManager({ threshold: 0.8 });
-        // console.log('NerManager', manager);
-
         const Locale = 'tr'
 
         let nlp;
 
         (async () => {
+            const model = await fetch("./model.nlp").then(res => res.json())
+
             const container = await containerBootstrap();
-            container.register('fs', fs);
             container.use(Nlp);
             container.use(LangTr);
             nlp = container.get('nlp');
-            nlp.settings.autoSave = false;
-            nlp.addLanguage('tr');
-            await nlp.addCorpus('https://raw.githubusercontent.com/progayk/chatbot-with-nlpjs/master/corpus-tr.json');
-            await nlp.train();
-            const response = await nlp.process('tr', 'selam');
+            nlp.import(model)
+            const response = await nlp.process(Locale, 'selam');
             console.log(response);
         })();
 
@@ -118,7 +115,7 @@
                     msg: '',
                     senderName: "Ayse",
                     msgList: [
-                    
+
                     ],
                 }
             },
