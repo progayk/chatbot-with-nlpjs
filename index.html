@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src='./bundle.js'></script>
+    <!-- <script>
+       
+    </script> -->
+
+    <style>
+        .msg-c {
+            min-width: 600px;
+            height: 100%;
+            padding: 1rem;
+            background-color: #eee;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .msg-box {
+            position: relative;
+            max-width: 450px;
+            width: 450px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 0.25rem 1rem;
+            margin-bottom: 1rem;
+            background-color: white;
+        }
+
+        .is-right {
+            margin-left: auto;
+        }
+
+        .msg-sender {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            margin-top: 4px;
+            margin-bottom: 0px;
+        }
+
+        .msg-input-c {
+            max-width: 600px;
+            padding: 1rem;
+        }
+
+        .msg-input {
+            width: 90%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Chatbot</h1>
+
+
+    <div id="app">
+
+        <div class="msg-c">
+
+            <div v-for="msg in msgList" :key="msg.id" class="msg-box" :class="{ 'is-right': msg.isBot }">
+                <p class="msg-sender">{{ msg.name }}</p>
+                <p>
+                    {{ msg.text }}
+                </p>
+            </div>
+        </div>
+
+        <div class="msg-input-c">
+            <form @submit.prevent="sendMsg">
+
+                <input v-model="msg" type="text" class="msg-input">
+                <button type="button" @click="sendMsg" class="send-btn" :disabled="!msg.length">Send</button>
+            </form>
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const { containerBootstrap, Nlp, LangTr, fs } = window.nlpjs;
+
+        const Locale = 'tr'
+
+        let nlp;
+
+        (async () => {
+            const container = await containerBootstrap();
+            container.register('fs', fs);
+            container.use(Nlp);
+            container.use(LangTr);
+            nlp = container.get('nlp');
+            nlp.settings.autoSave = false;
+            nlp.addLanguage('tr');
+            // Adds the utterances and intents for the NLP
+            await nlp.addCorpus('./corpus-tr.json');
+            // nlp.addDocument(Locale, 'görüşürüz', 'greetings.bye');
+            // nlp.addDocument(Locale, 'kendine iyi bak', 'greetings.bye');
+            // nlp.addDocument(Locale, 'Bye', 'greetings.bye');
+            // nlp.addDocument(Locale, 'öptüm', 'greetings.bye');
+            // nlp.addDocument(Locale, 'hoşçakal', 'greetings.bye');
+            // nlp.addDocument(Locale, 'selam', 'greetings.hello');
+            // nlp.addDocument(Locale, 'merhaba', 'greetings.hello');
+            // nlp.addDocument(Locale, 'slm', 'greetings.hello');
+
+            // // Train also the NLG
+            // nlp.addAnswer(Locale, 'greetings.bye', 'Öperim ');
+            // nlp.addAnswer(Locale, 'greetings.bye', 'Görüşürüz');
+            // nlp.addAnswer(Locale, 'greetings.hello', 'Selam');
+            // nlp.addAnswer(Locale, 'greetings.hello', 'Selam, naber?');
+            await nlp.train();
+            const response = await nlp.process('tr', 'selam');
+            console.log(response);
+        })();
+
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max));
+        }
+
+        const Bot = {
+            data() {
+                return {
+                    msg: '',
+                    senderName: "Ayse",
+                    msgList: [
+                    
+                    ],
+                }
+            },
+            methods: {
+                newMsg() {
+                    return {
+                        index: ++this.index,
+                        isBot: false,
+                        text: this.msg,
+                        datetime: new Date().toDateString(),
+                        name: this.senderName
+                    }
+                },
+                sendMsg() {
+                    this.msgList.push(this.newMsg())
+                    let msg = this.msg.slice();
+                    this.msg = ''
+                    this.nlpProcess(msg)
+                },
+                async nlpProcess(msg) {
+                    try {
+                        const res = await nlp.process(Locale, msg);
+                        console.log('res', res);
+
+                        if (res.answers.length) {
+                            this.respondDirect(res)
+                        } else {
+                            this.respondNew(res)
+                        }
+
+
+                    } catch (error) {
+                        console.error(error);
+                    }
+                },
+                respondDirect(res) {
+                    let botRes = this.newMsg()
+                    botRes.isBot = true
+                    botRes.name = 'Bot'
+                    botRes.text = res.answers[getRandomInt(res.answers.length)].answer
+                    this.msgList.push(botRes)
+                },
+                respondNew(res) {
+                    console.log('respondNew', res);
+                }
+            }
+
+        }
+
+
+        Vue.createApp(Bot).mount('#app')
+
+    </script>
+
+
+</body>
+
+</html>

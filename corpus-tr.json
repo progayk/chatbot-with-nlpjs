@@ -1,0 +1,49 @@
+{
+    "name": "Corpus",
+    "locale": "tr-TR",
+    "data": [
+        {
+            "intent": "agent.whereami",
+            "utterances": [
+                "neredeyim",
+                "nereden"
+            ],
+            "answers": [
+                {
+                    "answer": "you're talking from console, app is {{ app }} channel is {{ channel }}",
+                    "opts": "channel==='console'"
+                },
+                {
+                    "answer": "you're talking from directline, app is {{ app }} channel is {{ channel }}",
+                    "opts": "channel==='directline'"
+                },
+                {
+                    "answer": "you're talking from microsoft emulator, app is {{ app }} channel is {{ channel }}",
+                    "opts": "channel==='msbf-emulator'"
+                }
+            ]
+        },
+        {
+            "intent": "agent.acquaintance",
+            "utterances": [
+                "say about you",
+                "why are you here",
+                "what is your personality",
+                "describe yourself",
+                "tell me about yourself",
+                "tell me about you",
+                "what are you",
+                "who are you",
+                "I want to know more about you",
+                "talk about yourself"
+            ],
+            "answers": [
+                "I'm a virtual agent",
+                "Think of me as a virtual agent",
+                "Well, I'm not a person, I'm a virtual agent",
+                "I'm a virtual being, not a real person",
+                "I'm a conversational app"
+            ]
+        }
+    ]
+}
