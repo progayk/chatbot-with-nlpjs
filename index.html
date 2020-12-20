@@ -62,7 +62,6 @@
 
     <h1>Chatbot</h1>
 
-
     <div id="app">
 
         <div class="msg-c">
@@ -88,25 +87,31 @@
 
     <script>
 
-        const { containerBootstrap, Nlp, LangTr, fs } = window.nlpjs;
+        const { containerBootstrap, Nlp, LangTr, Context, Ner , fs } = window.nlpjs;
+        let context = new Context()
+        const ner = new Ner()
         const Locale = 'tr'
 
         let nlp;
 
         (async () => {
             const model = await fetch("./model.nlp").then(res => res.json())
-
+            console.log('model', model);
+            
             const container = await containerBootstrap();
             container.use(Nlp);
             container.use(LangTr);
+            container.use(Ner)
             nlp = container.get('nlp');
+            nlp.settings.autoSave = false;
             nlp.import(model)
-            const response = await nlp.process(Locale, 'selam');
-            console.log(response);
+
         })();
 
+
+
         function getRandomInt(max) {
-            return Math.floor(Math.random() * Math.floor(max));
+            return Math.floor(Math.random() * Math.floor(max)); 
         }
 
         const Bot = {
@@ -137,14 +142,14 @@
                 },
                 async nlpProcess(msg) {
                     try {
-                        const res = await nlp.process(Locale, msg);
+                        const res = await nlp.process(Locale, msg, context);
                         console.log('res', res);
 
-                        // const ent = await  nlp.extractEntities(Locale, msg)
-                        // console.log('ent', ent);
+                        const ent = await  nlp.extractEntities(Locale, msg, context)
+                        console.log('ent', ent);
 
                         if (res.intent !== 'None') {
-                            this.respondDirect(res)
+                            this.respondDirect(res, ent)
                         } else {
                             this.respondNew(res)
                         }
@@ -154,12 +159,23 @@
                         console.error(error);
                     }
                 },
-                respondDirect(res) {
+                respondDirect(res, entObj) {
+                    let answer = res.answer
+                    if (entObj.entities && entObj.entities.length) {
+                        answer = this.createResWithEntity(res.answer, entObj)
+                    } else {
+                        answer = res.answers[getRandomInt(res.answers.length)].answer
+                    }
+
                     let botRes = this.newMsg()
                     botRes.isBot = true
                     botRes.name = 'Bot'
-                    botRes.text = res.answers[getRandomInt(res.answers.length)].answer
+                    botRes.text = answer
                     this.msgList.push(botRes)
+                },
+                createResWithEntity(answer, entObj) {
+                    let replaceStr = '{{' + entObj.entities[0].entity + '}}'
+                    return answer.replace(replaceStr, entObj.entities[0].utteranceText)
                 },
                 respondNew(res) {
                     console.log('respondNew', res);

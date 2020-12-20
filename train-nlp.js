@@ -2,32 +2,58 @@
 
 
 
-const { NlpManager } = require('node-nlp');
+const { NlpManager, ConversationContext } = require('node-nlp');
 
 const corpusData = require('./corpus-tr.json')
 
 const Locale = 'tr';
+const manager = new NlpManager({ languages: [Locale], autoSave: false, forceNER: true });
+const context = new ConversationContext();
+
+console.log('contxt', context.settings);
 
 (async () => {
-    // let filename = 'my-agent'
-    const manager = new NlpManager({ languages: [Locale], autoSave: true });
-    // const context = new ConversationContext();
 
     manager.addCorpus(corpusData)
 
 
-    // manager.addDocument(Locale, 'Selam ismin %name%', 'greeting.hello');
-    // manager.addDocument(Locale, 'Gitmem lazim', 'greeting.bye');
-    // manager.addAnswer(Locale, 'greeting.hello', 'selam');
-    // manager.addAnswer(Locale, 'greeting.bye', 'Bye, {{name}}!');
+    // context
+    manager.addDocument(Locale, 'Selam ismim %name%', 'greeting.hello');
+    manager.addDocument(Locale, 'Gitmem lazim', 'greeting.bye');
+    manager.addAnswer(Locale, 'greeting.hello', 'selam {{name}}');
+    manager.addAnswer(Locale, 'greeting.bye', 'Bye, {{name}}!');
+
+
+    // named entities
+    manager.addNamedEntityText(
+        'food',
+        'burger',
+        [Locale],
+        ['Burger', 'Hamburger'],
+    );
+    manager.addNamedEntityText('food', 'pizza', [Locale], ['pizza']);
+    manager.addNamedEntityText('food', 'pasta', [Locale], ['makarna', 'spagetti']);
+
+
+    manager.addDocument(Locale, '@food yemek istiyorum', 'wanteat');
+    manager.addAnswer(Locale, 'wanteat', '{{food}} yemeye gidelim o zaman!');
+
 
 
     await manager.train();
-    manager.export(true);
-    // const data = manager.export(true);
-    // export as
-    // manager.save(filename)
-    // manager.export()
+
+
+    console.log('context', context);
+
+
+    // manager.process(Locale, 'makarna yemek istiyorum')
+        // .then(result => manager.process(Locale, 'Gitmem lazim', context))
+        // .then(result => console.log(result));
+
+
+    manager.save();
+
+
 })()
 
 

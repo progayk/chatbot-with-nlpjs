@@ -1,7 +1,7 @@
 {
     "name": "Corpus",
     "locale": "tr-TR",
-
+    "contextData": "./heros.json",
     "data": [
         {
             "intent": "agent.acquaintance",
@@ -18,7 +18,7 @@
             ]
         },
         {
-            "intent": "greetings.hello",
+            "intent": "greeting.hello",
             "utterances": [
                 "selam",
                 "merhaba"
@@ -29,7 +29,7 @@
             ]
         },
         {
-            "intent": "greetings.bye",
+            "intent": "greeting.bye",
             "utterances": [
                 "görüşürüz",
                 "öptüm",
@@ -46,7 +46,7 @@
             ]
         },
         {
-            "intent": "greetings.inquering",
+            "intent": "greeting.inquering",
             "utterances": [
                 "naber",
                 "nasılsın",
@@ -63,13 +63,22 @@
             ]
         },
         {
-            "intent": "hero.realname",
+            "intent": "heroname",
             "utterances": [
-                "what is the real name of @hero"
+                "en sevdigin %hero%"
             ],
             "answers": [
-                "The real name of {{ hero }} is {{ _data[entities.hero.option].realName }}"
+                "{{hero}} tabii ki"
             ]
         }
-    ]
+    ],
+    "entities": {
+        "hero": {
+          "options": {
+            "spiderman": ["spiderman", "spider-man"],
+            "ironman": ["ironman", "iron-man"],
+            "thor": ["thor"]
+          }
+        }
+      }
 }
